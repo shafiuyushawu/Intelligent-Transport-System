@@ -1,0 +1,123 @@
+project:
+  name: traffic-congestion-replication-lecturer-demo
+  article:
+    title: Control strategies for solving the problem of traffic congestion
+    authors:
+      - Yi-Sheng Huang
+      - Yi-Shun Weng
+      - Weimin Wu
+      - Bo-Yang Chen
+    journal: IET Intelligent Transport Systems
+    year: 2016
+    doi: 10.1049/iet-its.2016.0003
+
+environment:
+  required_sumo_home: ${SUMO_HOME}
+  log_level: INFO
+
+simulation:
+  random_seeds: [11]
+  warmup_seconds: 120
+  measurement_seconds: 480
+  route_generation_horizon_seconds: 600
+
+signals:
+  include_transition_phases: true
+  yellow_seconds: 3
+  all_red_seconds: 1
+
+routes:
+  normalization_mode: normalize
+  demand_levels:
+    low: 2000
+    medium: 4000
+    heavy: 6000
+  minor_demand_ratio: 0.6666667
+  canonical_entrances:
+    I: west_r3
+    J: south_c3
+    K: north_c3
+  canonical_exits:
+    I:
+      - east_r0
+      - east_r1
+      - east_r2
+      - east_r3
+      - east_r4
+      - east_r5
+      - east_r6
+    J:
+      - north_c0
+      - north_c1
+      - north_c2
+      - north_c3
+      - north_c4
+      - north_c5
+      - north_c6
+    K:
+      - south_c0
+      - south_c1
+      - south_c2
+      - south_c3
+      - south_c4
+      - south_c5
+      - south_c6
+  raw_exit_weights:
+    I: [1.43, 2.14, 4.28, 50.0, 4.28, 2.14, 1.43]
+    J: [1.72, 3.44, 1.72, 50.0, 1.72, 3.44, 1.72]
+    K: [1.72, 3.44, 1.72, 50.0, 1.72, 3.44, 1.72]
+
+congestion:
+  zone_id: zone_ab
+  warmup_seconds: 120
+  activation_seconds: 180
+  deactivation_seconds: 420
+  incident_duration_seconds: 240
+  reduced_speed_kph: 10
+  affected_edges:
+    - e_r3c2__r3c3
+    - e_r3c3__r3c4
+    - e_r3c3__r3c2
+    - e_r3c4__r3c3
+  affected_lane_indices: [0, 1, 2]
+  detector_length_m: 50
+  detector_edges:
+    upstream:
+      - e_r3c1__r3c2
+    inside:
+      - e_r3c2__r3c3
+      - e_r3c3__r3c4
+    downstream:
+      - e_r3c4__r3c5
+    alternative_north:
+      - e_r2c1__r2c2
+      - e_r2c2__r2c3
+    alternative_south:
+      - e_r4c1__r4c2
+      - e_r4c2__r4c3
+
+network:
+  grid_size: 7
+  block_spacing_m:
+    horizontal: 200
+    vertical: 175
+  boundary_stub_m:
+    horizontal: 225
+    vertical: 175
+  lane_counts:
+    main: 3
+    minor: 2
+  speed_limits_kph:
+    main: 50
+    minor: 40
+
+paths:
+  network_source: network/source
+  network_generated: network/generated
+  network_metadata: network/metadata
+  routes_generated: routes/generated
+  routes_summaries: routes/summaries
+  results_raw: results/lecturer_demo/raw
+  results_processed: results/lecturer_demo/processed
+  results_figures: results/lecturer_demo/figures
+  results_logs: results/lecturer_demo/logs
